@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 void main() {
   runApp(
@@ -54,7 +55,10 @@ class _GroceryState extends State<Grocery> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(bottomNavigationBar: NavBar(context));
+    return Scaffold(
+      body: screens[screenIndex],
+      bottomNavigationBar: NavBar(context),
+    );
   }
 
   Container NavBar(BuildContext context) {
@@ -158,9 +162,112 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
+  final List<Map<String, String>> categories = [
+    {
+      'title': 'Fresh Fruits & Vegetable',
+      'price': '\$07.00',
+      'image': 'assets/images/fruits.webp',
+    },
+    {
+      'title': 'Bakery & Snacks',
+      'price': '\$06.00',
+      'image': 'assets/images/bakery.png',
+    },
+    {
+      'title': 'Meat & Fish',
+      'price': '\$08.00',
+      'image': 'assets/images/meat.png',
+    },
+    {
+      'title': 'Egg Chicken Red',
+      'price': '\$06.00',
+      'image': 'assets/images/egg.png',
+    },
+    {
+      'title': 'Cooking Oil & Ghee',
+      'price': '\$06.00',
+      'image': 'assets/images/oil.png',
+    },
+    {
+      'title': 'Apple & Grape Juice',
+      'price': '\$06.00',
+      'image': 'assets/images/juice.png',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(title: const Text('Groceries Collections')),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: StaggeredGrid.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          children: List.generate(categories.length, (index) {
+            final item = categories[index];
+            return StaggeredGridTile.fit(
+              crossAxisCellCount: 1,
+              child: CategoryTile(
+                title: item['title']!,
+                price: item['price']!,
+                image: item['image']!,
+              ),
+            );
+          }),
+        ),
+      ),
+    );
+  }
+}
+
+class CategoryTile extends StatelessWidget {
+  final String title;
+  final String price;
+  final String image;
+
+  const CategoryTile({
+    required this.title,
+    required this.price,
+    required this.image,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 5)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            child: Image.asset(
+              image,
+              height: 120,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(price, style: const TextStyle(color: Colors.green)),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
   }
 }
 
