@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(
@@ -57,11 +58,11 @@ class _GroceryState extends State<Grocery> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: screens[screenIndex],
-      bottomNavigationBar: NavBar(context),
+      bottomNavigationBar: navBar(context),
     );
   }
 
-  Container NavBar(BuildContext context) {
+  Container navBar(BuildContext context) {
     return Container(
       height: 60,
       decoration: BoxDecoration(
@@ -195,27 +196,58 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     },
   ];
 
+  // Helper function for type conversion (add this to your class):
+  double _convertToDouble(dynamic value, {double defaultValue = 0.0}) {
+    if (value == null) return defaultValue;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? defaultValue;
+    return defaultValue;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Groceries Collections')),
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Groceries',
+              style: GoogleFonts.roboto(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'Collections',
+              style: GoogleFonts.roboto(
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+
       body: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: StaggeredGrid.count(
+        child: MasonryGridView.count(
           crossAxisCount: 2,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
-          children: List.generate(categories.length, (index) {
+          itemCount: categories.length,
+          itemBuilder: (context, index) {
             final item = categories[index];
-            return StaggeredGridTile.fit(
-              crossAxisCellCount: 1,
-              child: CategoryTile(
-                title: item['title']!,
-                price: item['price']!,
-                image: item['image']!,
-              ),
+            return CategoryTile(
+              title: item['title']!,
+              price: item['price']!,
+              image: item['image']!,
+              description: item['description'] ?? '',
+              rating: _convertToDouble(item['rating']),
+              height: _convertToDouble(item['height'], defaultValue: 200.0),
             );
-          }),
+          },
         ),
       ),
     );
@@ -226,45 +258,130 @@ class CategoryTile extends StatelessWidget {
   final String title;
   final String price;
   final String image;
+  final String description;
+  final double rating;
+  final double height;
 
   const CategoryTile({
+    super.key,
     required this.title,
     required this.price,
     required this.image,
+    required this.description,
+    required this.rating,
+    required this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: height,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 5)],
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(10),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            child: Image.asset(
-              image,
-              height: 120,
-              width: double.infinity,
-              fit: BoxFit.cover,
+          // Image section with varying heights
+          Expanded(
+            flex: 3,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
+              child: Container(
+                width: double.infinity,
+                color: Colors.grey[200],
+                child: Image.asset(
+                  image,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      child: Icon(
+                        Icons.image_not_supported,
+                        color: Colors.grey[600],
+                        size: 40,
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+
+          // Content section
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        description,
+                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Rating
+                      Row(
+                        children: [
+                          Icon(Icons.star, color: Colors.amber, size: 16),
+                          const SizedBox(width: 4),
+                          Text(
+                            rating.toString(),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      // Price
+                      Text(
+                        price,
+                        style: GoogleFonts.roboto(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(price, style: const TextStyle(color: Colors.green)),
-          ),
-          const SizedBox(height: 8),
         ],
       ),
     );
