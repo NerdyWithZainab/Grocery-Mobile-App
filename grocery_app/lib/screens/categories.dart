@@ -10,114 +10,199 @@ class CategoriesScreen extends StatefulWidget {
 }
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
-  final List<Map<String, dynamic>> categories = [
-    {
-      'title': 'Fresh Fruits & Vegetable',
-      'price': '\$07.00',
-      'image': 'assets/images/fruits.webp',
-      'description':
-          'Fresh organic fruits and vegetables delivered straight from the farm',
-      'rating': 4.5,
-    },
-    {
-      'title': 'Bakery & Snacks',
-      'price': '\$06.00',
-      'image': 'assets/images/bakery.png',
-      'description': 'Fresh baked goods',
-      'rating': 4.2,
-    },
-    {
-      'title': 'Meat & Fish',
-      'price': '\$08.00',
-      'image': 'assets/images/meat.png',
-      'description':
-          'Premium quality meat and fish sourced from trusted suppliers with guaranteed freshness',
-      'rating': 4.7,
-    },
-    {
-      'title': 'Egg Chicken Red',
-      'price': '\$06.00',
-      'image': 'assets/images/egg.png',
-      'description': 'Farm fresh',
-      'rating': 4.3,
-    },
-    {
-      'title': 'Cooking Oil & Ghee',
-      'price': '\$06.00',
-      'image': 'assets/images/oil.png',
-      'description': 'Pure cooking oils and ghee made from natural ingredients',
-      'rating': 4.1,
-    },
-    {
-      'title': 'Apple & Grape Juice',
-      'price': '\$06.00',
-      'image': 'assets/images/juice.png',
-      'description':
-          '100% natural fruit juices without any artificial preservatives or added sugars',
-      'rating': 4.6,
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    loadImagesWithCheck();
+  }
+
+  List<Map<String, dynamic>> categories = [];
+  Future<void> loadImagesWithCheck() async {
+    final List<Map<String, dynamic>> rawCategories = [
+      {
+        'title': 'Fresh Fruits\n& Vegetable',
+        'price': '\$07.00',
+        'image': "assets/images/fruits_vegetables.png",
+        'description':
+            'Fresh organic fruits and vegetables delivered straight from the farm',
+        'rating': 4.5,
+        'itemCount': 245,
+        'backgroundColor': const Color(0xFFE8F5E8), // Light green
+      },
+      {
+        'title': 'Bakery & Snacks',
+        'price': '\$06.00',
+        'image': 'assets/images/bakery.png',
+        'description': 'Fresh baked goods',
+        'rating': 4.2,
+        'itemCount': 180,
+        'backgroundColor': const Color(0xFFFFF2E0), // Light orange
+      },
+      {
+        'title': 'Meat & Fish',
+        'price': '\$08.00',
+        'image': 'assets/images/meat.jpg',
+        'description':
+            'Premium quality meat and fish sourced from trusted suppliers',
+        'rating': 4.7,
+        'itemCount': 120,
+        'backgroundColor': const Color(0xFFFFE6E6), // Light pink/red
+      },
+      {
+        'title': 'Egg',
+        'price': '\$06.00',
+        'image': 'assets/images/egg.webp',
+        'description': 'Farm fresh eggs',
+        'rating': 4.3,
+        'itemCount': 95,
+        'backgroundColor': const Color(0xFFFFF0F0), // Very light pink
+      },
+      {
+        'title': 'Cooking Oil\n& Ghee',
+        'price': '\$06.00',
+        'image': 'assets/images/cooking_oil.jpg',
+        'description':
+            'Pure cooking oils and ghee made from natural ingredients',
+        'rating': 4.1,
+        'itemCount': 75,
+        'backgroundColor': const Color(0xFFE8F5E8), // Light green
+      },
+      {
+        'title': 'Juices',
+        'price': '\$06.00',
+        'image': 'assets/images/juices.jpg',
+        'description': '100% natural fruit juices without preservatives',
+        'rating': 4.6,
+        'itemCount': 65,
+        'backgroundColor': const Color(0xFFFFE6F0), // Light pink
+      },
+    ];
+    setState(() {
+      categories = rawCategories;
+    });
+  }
 
   // Helper function to calculate dynamic height based on content
   double _calculateDynamicHeight(
     String title,
     String description,
+    int itemCount,
     double rating,
   ) {
-    const double baseHeight = 160.0;
-    const double titleMultiplier = 1.2;
+    const double baseHeight = 180.0;
+    const double titleMultiplier = 2.5;
     const double descriptionMultiplier = 0.8;
-    const double ratingHeight = 20.0;
+    const double itemCountHeight = 15.0;
+    const double ratingHeight = 10.0;
 
-    // Calculate height based on text length
+    // Calculate height based on text length and content
     double titleHeight = title.length * titleMultiplier;
     double descriptionHeight = description.length * descriptionMultiplier;
-    double extraHeight = rating > 0 ? ratingHeight : 0;
+    double extraHeight = itemCountHeight + (rating > 0 ? ratingHeight : 0);
 
-    // Calculate total height with min/max constraints
+    // Add random variation for more natural masonry effect
+    double randomVariation =
+        (itemCount % 3) * 20.0; // Based on item count for consistency
+
+    // Calculate total height
     double totalHeight =
-        baseHeight + titleHeight + descriptionHeight + extraHeight;
+        baseHeight +
+        titleHeight +
+        descriptionHeight +
+        extraHeight +
+        randomVariation;
 
-    // Apply constraints: minimum 160, maximum 280
-    return totalHeight.clamp(160.0, 280.0);
+    // Apply constraints: minimum 200, maximum 320
+    return totalHeight.clamp(200.0, 320.0);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Groceries',
               style: GoogleFonts.roboto(
-                fontSize: 30,
+                fontSize: 28,
                 fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(
               'Collections',
               style: GoogleFonts.roboto(
-                fontSize: 25,
+                fontSize: 22,
                 fontWeight: FontWeight.w600,
+                color: Colors.black,
               ),
             ),
           ],
         ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 16),
+            child: Stack(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: const Text(
+                      '0',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(16.0),
         child: MasonryGridView.count(
           crossAxisCount: 2,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
           itemCount: categories.length,
           itemBuilder: (context, index) {
             final item = categories[index];
             final dynamicHeight = _calculateDynamicHeight(
               item['title']!,
               item['description'] ?? '',
+              item['itemCount'] ?? 0,
               item['rating']?.toDouble() ?? 0.0,
             );
 
@@ -127,6 +212,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               image: item['image']!,
               description: item['description'] ?? '',
               rating: item['rating']?.toDouble() ?? 0.0,
+              itemCount: item['itemCount'] ?? 0,
+              backgroundColor: item['backgroundColor'] ?? Colors.grey[100]!,
               height: dynamicHeight,
             );
           },
@@ -142,6 +229,8 @@ class CategoryTile extends StatelessWidget {
   final String image;
   final String description;
   final double rating;
+  final int itemCount;
+  final Color backgroundColor;
   final double height;
 
   const CategoryTile({
@@ -151,118 +240,158 @@ class CategoryTile extends StatelessWidget {
     required this.image,
     required this.description,
     required this.rating,
+    required this.itemCount,
+    required this.backgroundColor,
     required this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height, // This uses the dynamic height
+      height: height, // Uses the calculated dynamic height
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(10),
-            blurRadius: 8,
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          // Image section with varying heights
-          Expanded(
-            flex: 3,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-              child: Container(
-                width: double.infinity,
-                color: Colors.grey[200],
-                child: Image.asset(
-                  image,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child: Icon(
-                        Icons.image_not_supported,
-                        color: Colors.grey[600],
-                        size: 40,
+          // Main content
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title and item count
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black87,
+                              height: 1.2,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '$itemCount Items',
+                            style: GoogleFonts.roboto(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
                       ),
-                    );
-                  },
+                    ),
+                    // Sort/filter icon
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.tune,
+                        size: 16,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+
+                // Spacer to push image to bottom
+                const Spacer(),
+
+                // Image section
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        image,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey[600],
+                              size: 40,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
 
-          // Content section
-          Expanded(
-            flex: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: GoogleFonts.roboto(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        description,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Rating (only show if rating > 0)
-                      if (rating > 0) ...[
-                        Row(
-                          children: [
-                            Icon(Icons.star, color: Colors.amber, size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              rating.toString(),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                      ],
-                      // Price
-                      Text(
-                        price,
-                        style: GoogleFonts.roboto(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
+          // Circular price badge at bottom right
+          Positioned(
+            bottom: 12,
+            right: 12,
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.black87,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
                   ),
                 ],
+              ),
+              child: Icon(Icons.shopping_cart, color: Colors.white, size: 20),
+            ),
+          ),
+
+          // Price label near the circular button
+          Positioned(
+            bottom: 50,
+            right: 16,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: Text(
+                price,
+                style: GoogleFonts.roboto(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
             ),
           ),
