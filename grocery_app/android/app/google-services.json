@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "369609442925",
+    "project_id": "grocery-app-a86dc",
+    "storage_bucket": "grocery-app-a86dc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369609442925:android:cad9c6f23daca7255ea164",
+        "android_client_info": {
+          "package_name": "com.nerdywithzainab.grocery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlLuokE5ryr_7-7ODGp1JyjvM3d5s7lWc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
