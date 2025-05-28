@@ -22,7 +22,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       {
         'title': 'Fresh Fruits\n& Vegetable',
         'price': '\$07.00',
-        'image': "assets/images/fruits_vegetables.png",
+        'image': "fruits_vegetables.jpg",
         'description':
             'Fresh organic fruits and vegetables delivered straight from the farm',
         'rating': 4.5,
@@ -32,7 +32,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       {
         'title': 'Bakery & Snacks',
         'price': '\$06.00',
-        'image': 'assets/images/bakery.png',
+        'image': 'bakery.webp',
         'description': 'Fresh baked goods',
         'rating': 4.2,
         'itemCount': 180,
@@ -41,7 +41,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       {
         'title': 'Meat & Fish',
         'price': '\$08.00',
-        'image': 'assets/images/meat.jpg',
+        'image': 'meat.jpg',
         'description':
             'Premium quality meat and fish sourced from trusted suppliers',
         'rating': 4.7,
@@ -51,7 +51,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       {
         'title': 'Egg',
         'price': '\$06.00',
-        'image': 'assets/images/egg.webp',
+        'image': 'egg.jpg',
         'description': 'Farm fresh eggs',
         'rating': 4.3,
         'itemCount': 95,
@@ -60,7 +60,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       {
         'title': 'Cooking Oil\n& Ghee',
         'price': '\$06.00',
-        'image': 'assets/images/cooking_oil.jpg',
+        'image': 'cooking_oil.jpg',
         'description':
             'Pure cooking oils and ghee made from natural ingredients',
         'rating': 4.1,
@@ -70,7 +70,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       {
         'title': 'Juices',
         'price': '\$06.00',
-        'image': 'assets/images/juices.jpg',
+        'image': 'juices.jpg',
         'description': '100% natural fruit juices without preservatives',
         'rating': 4.6,
         'itemCount': 65,
@@ -319,23 +319,40 @@ class CategoryTile extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
+                      color: backgroundColor,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        image,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[300],
-                            child: Icon(
-                              Icons.image_not_supported,
-                              color: Colors.grey[600],
-                              size: 40,
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: Container(color: backgroundColor),
+                          ),
+                          Positioned.fill(
+                            child: ColorFiltered(
+                              colorFilter: ColorFilter.mode(
+                                backgroundColor.withAlpha(100),
+                                BlendMode.overlay,
+                              ),
+
+                              child: Image.asset(
+                                image,
+                                fit: BoxFit.fill,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.grey[300],
+                                    child: Icon(
+                                      Icons.image_not_supported,
+                                      color: Colors.grey[600],
+                                      size: 40,
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
                     ),
                   ),
