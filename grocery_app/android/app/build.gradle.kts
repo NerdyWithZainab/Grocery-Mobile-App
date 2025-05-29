@@ -8,9 +8,12 @@ plugins {
 }
 
 android {
-        sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+   sourceSets {
+    getByName("main") {
+        java.srcDirs("src/main/kotlin")
     }
+}
+
     namespace = "com.nerdywithzainab.grocery"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
