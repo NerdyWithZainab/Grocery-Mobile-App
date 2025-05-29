@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:grocery_app/login_screen.dart';
+
 import 'package:grocery_app/navigation/navbar.dart';
+import 'package:grocery_app/register_screen.dart';
+import 'package:grocery_app/routes.dart';
+
+import 'package:grocery_app/screens/home.dart';
 
 void main() {
   runApp(
@@ -16,6 +22,11 @@ void main() {
       themeMode: ThemeMode.system,
       home: GroceryApp(),
       debugShowCheckedModeBanner: false,
+      routes: {
+        loginRoute: (context) => const LoginScreen(),
+        registerRoute: (context) => const RegisterScreen(),
+        homeRoute: (context) => const HomeScreen(),
+      },
     ),
   );
 }
