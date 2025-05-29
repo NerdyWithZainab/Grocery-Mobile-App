@@ -8,6 +8,8 @@ import 'package:grocery_app/routes.dart';
 import 'package:grocery_app/screens/home.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     MaterialApp(
       title: "Grocery App",
